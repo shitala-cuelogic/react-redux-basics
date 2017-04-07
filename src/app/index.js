@@ -9,29 +9,31 @@ import {User} from "./components/User";
 
 class App extends React.Component {
     render() {
-    	console.log(browserHistory)
+        console.log(browserHistory)
         return (
             <Router history={browserHistory}>
-      			<Route path={"/"} component={Root}>
-         			<IndexRoute component={Home}></IndexRoute>
-         			<Route path="home" component={Home} />
-         			<Route path="user" component={User} />
-			    </Route>
-   			</Router>
+                <Route path={"/"} component={Root}>
+                    <IndexRoute component={Home}></IndexRoute>
+                    <Route path="home" component={Home} />
+                    <Route path="user" component={User} />
+                </Route>
+            </Router>
         );
     }
 }
 
 render(<App/>, window.document.getElementById("app"));*/
 
-import { createStore, combineReducers} from "redux"; 
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import logger from "redux-logger";
 
-const mathReducer = (state =  {
+
+const mathReducer = (state = {
     result: 1,
     lastValues: []
 }, action) => {
     switch (action.type) {
-        case "ADD": 
+        case "ADD":
             state = {
                 ...state,
                 result: state.result + action.payload,
@@ -41,20 +43,20 @@ const mathReducer = (state =  {
         case "SUBTRACT":
             state = {
                 ...state,
-                result: state.result- action.payload
+                result: state.result - action.payload
             };
-            break;    
+            break;
     }
 
     return state;
 };
 
-const userReducer = (state =  {
+const userReducer = (state = {
     name: "Max",
     age: 1
 }, action) => {
     switch (action.type) {
-        case "SET_NAME": 
+        case "SET_NAME":
             state = {
                 ...state,
                 name: action.payload
@@ -65,16 +67,22 @@ const userReducer = (state =  {
                 ...state,
                 name: action.payload
             };
-            break;    
+            break;
     }
 
     return state;
 };
 
+const myLogger = (store) => (next) => (action) => {
+    console.log("Logged action", action);
+    next(action)
+}
+
 const store = createStore(combineReducers({
-    mathReducer:mathReducer, //As per ES5
-    userReducer //As per ES6
-}));
+        mathReducer: mathReducer, //As per ES5
+        userReducer //As per ES6
+    }), {},
+    applyMiddleware(myLogger, logger));
 
 store.subscribe(() => {
     console.log("Store Updated", store.getState());
