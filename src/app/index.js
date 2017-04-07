@@ -1,32 +1,12 @@
-/*import React from "react";
+import React from "react";
 import {render} from "react-dom";
-import { Router, Route, Link, browserHistory, IndexRoute  } from 'react-router';
-
-import {Root} from "./components/Root";
-import {Home} from "./components/Home";
-import {User} from "./components/User";
-
-
-class App extends React.Component {
-    render() {
-        console.log(browserHistory)
-        return (
-            <Router history={browserHistory}>
-                <Route path={"/"} component={Root}>
-                    <IndexRoute component={Home}></IndexRoute>
-                    <Route path="home" component={Home} />
-                    <Route path="user" component={User} />
-                </Route>
-            </Router>
-        );
-    }
-}
-
-render(<App/>, window.document.getElementById("app"));*/
 
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import logger from "redux-logger";
 
+import {Provider} from "react-redux";
+
+import App from "./components/App";
 
 const mathReducer = (state = {
     result: 1,
@@ -79,31 +59,14 @@ const myLogger = (store) => (next) => (action) => {
 }
 
 const store = createStore(combineReducers({
-        mathReducer: mathReducer, //As per ES5
+        math: mathReducer, //As per ES5
         userReducer //As per ES6
     }), {},
     applyMiddleware(myLogger, logger));
 
 store.subscribe(() => {
-    console.log("Store Updated", store.getState());
+    //console.log("Store Updated", store.getState());
 })
 
-store.dispatch({
-    type: "ADD",
-    payload: 2
-});
-
-store.dispatch({
-    type: "ADD",
-    payload: 3
-});
-
-store.dispatch({
-    type: "SUBTRACT",
-    payload: 4
-});
-
-store.dispatch({
-    type: "SET_AGE",
-    payload: 30
-});
+render(<Provider store={store}><App/></Provider>, 
+window.document.getElementById("app"));

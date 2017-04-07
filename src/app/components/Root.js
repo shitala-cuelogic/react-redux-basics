@@ -15,6 +15,7 @@ export class Root extends React.Component {
 						{this.props.children}	
 					</div>
 				</div>
+				<button onClick={this.props.changeUsername}>Change user name</button>
 			</div>
 		);
 	}
