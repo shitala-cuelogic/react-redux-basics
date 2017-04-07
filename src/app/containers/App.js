@@ -1,8 +1,8 @@
 import React from "react";
 import {connect} from "react-redux";
 
-import {User} from "./User";
-import {Root} from "./Root";
+import {User} from "../components/User";
+import {Root} from "../components/Root";
 
 class App extends React.Component {
     render() {
